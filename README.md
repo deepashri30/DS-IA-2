@@ -1,155 +1,22 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+WHY DO WE NEED ONLINE SHOPPING CART
 
-#define MAX_ITEMS 8
+In today’s digital era, e-commerce has become an essential platform for buying and selling products conveniently. Shopping carts are a core feature of these platforms, allowing users to select, modify, and review their items before making a purchase. This mini-project, titled “Simple Online Shopping Cart using Data Structures,” focuses on building a foundational shopping cart system, demonstrating how core data structures can be used effectively to handle cart operations.
 
-typedef struct {
-    char name[30];
-    float price;
-} Item;
+OBJECTIVE
 
-typedef struct CartNode {
-    Item item;
-    struct CartNode* next;
-} CartNode;
+The aim of this project is not only to understand the workings of an online shopping cart but also to illustrate how fundamental programming concepts and data structures play a crucial role in building interactive applications. By implementing a simple yet functional shopping cart, this project provides practical insight into the importance of data management and operations, offering a stepping stone to more complex e-commerce systems.
+The project uses data structures to handle cart functions like adding, removing, updating items, and calculating totals, simulating a real online shopping experience. Efficient data structures, such as lists or hash maps, ensure smooth cart operations and enhance user interaction. 
 
-typedef struct {
-    CartNode* head;
-} ShoppingCart;
+USE OF DATA STRUCTURE IN CODE
 
-void addItemToCart(ShoppingCart* cart, Item item) {
-    CartNode* newNode = (CartNode*)malloc(sizeof(CartNode));
-    newNode->item = item;
-    newNode->next = cart->head;
-    cart->head = newNode;
-    printf("Added %s to cart.\n", item.name);
-}
+In this online shopping cart program, data structures play an essential role in managing the cart's functionality and operations we used  Following Data Structures to Enhance our Cart’s Functionality:
+Linked List (CartNode and Shopping Cart:
+The linked list structure is used to manage the shopping cart items. Each item added to the cart is represented by a CartNode, which contains the item details (Item) and a pointer to the next node in the list.
+This structure allows dynamic insertion of items without needing a fixed-size array, meaning items can be added or removed freely. The linked list also makes it easy to traverse all items in the cart to calculate totals or display cart contents.
 
-void viewCart(ShoppingCart* cart) {
-    if (cart->head == NULL) {
-        printf("Your cart is empty.\n");
-        return;
-    }
+CONCLUSION OF MINI PROJECT
 
-    printf("Your Shopping Cart:\n");
-    float total = 0.0;
-    CartNode* current = cart->head;
-    while (current != NULL) {
-        printf("%s - ₹%.2f\n", current->item.name, current->item.price);
-        total += current->item.price;
-        current = current->next;
-    }
-    printf("Total: ₹%.2f\n", total);
-}
-
-void checkout(ShoppingCart* cart) {
-    if (cart->head == NULL) {
-        printf("Your cart is empty. Cannot checkout.\n");
-        return;
-    }
-
-    printf("Checking out...\n");
-    viewCart(cart);
-    printf("Thank you for your purchase!\n");
-
-    // Clear the cart
-    CartNode* current = cart->head;
-    while (current != NULL) {
-        CartNode* temp = current;
-        current = current->next;
-        free(temp);
-    }
-    cart->head = NULL; // Reset the cart
-
-    // Exit the program after checkout
-    exit(0);
-}
-
-void freeCart(ShoppingCart* cart) {
-    CartNode* current = cart->head;
-    while (current != NULL) {
-        CartNode* temp = current;
-        current = current->next;
-        free(temp);
-    }
-}
-
-void displayItems(const char* category, Item* items, int size) {
-    printf("%s:\n", category);
-    for (int i = 0; i < size; i++) {
-        printf("%d. %s - ₹%.2f\n", i + 1, items[i].name, items[i].price);
-    }
-}
-
-void addMultipleItemsToCart(ShoppingCart* cart, Item* fruits, Item* vegetables, Item* electronics, const int* choices, int count) {
-    for (int i = 0; i < count; i++) {
-        int itemChoice = choices[i];
-        if (itemChoice > 0 && itemChoice <= MAX_ITEMS) {
-            addItemToCart(cart, fruits[itemChoice - 1]);
-        } else if (itemChoice > MAX_ITEMS && itemChoice <= 2 * MAX_ITEMS) {
-            addItemToCart(cart, vegetables[itemChoice - MAX_ITEMS - 1]);
-        } else if (itemChoice > 2 * MAX_ITEMS && itemChoice <= 3 * MAX_ITEMS) {
-            addItemToCart(cart, electronics[itemChoice - 2 * MAX_ITEMS - 1]);
-        } else {
-            printf("Invalid item number: %d\n", itemChoice);
-        }
-    }
-}
-
-int main() {
-    Item fruits[MAX_ITEMS] = {
-        {"Apple", 20.00}, {"Banana", 10.00}, {"Orange", 15.00}, {"Grapes", 40.00},
-        {"Strawberry", 50.00}, {"Peach", 30.00}, {"Watermelon", 60.00}, {"Pineapple", 45.00}
-    };
-
-    Item vegetables[MAX_ITEMS] = {
-        {"Carrot", 20.00}, {"Broccoli", 50.00}, {"Spinach", 30.00}, {"Potato", 20.00},
-        {"Tomato", 25.00}, {"Onion", 15.00}, {"Cucumber", 18.00}, {"Bell Pepper", 40.00}
-    };
-
-    Item electronics[MAX_ITEMS] = {
-        {"Smartphone", 15000.00}, {"Laptop", 50000.00}, {"Headphones", 2000.00},
-        {"Smartwatch", 4000.00}, {"Tablet", 25000.00}, {"Camera", 30000.00},
-        {"Bluetooth Speaker", 1500.00}, {"Smart TV", 40000.00}
-    };
-
-    ShoppingCart cart = { .head = NULL };
-    int choice;
-
-    do {
-        printf("\n--- Online Shopping Cart ---\n");
-        displayItems("Fruits", fruits, MAX_ITEMS);
-        displayItems("Vegetables", vegetables, MAX_ITEMS);
-        displayItems("Electronics", electronics, MAX_ITEMS);
-
-        printf("Select items to add to cart (use item numbers separated by commas, e.g., 1,9,17), or 0 to view cart: ");
-        
-        char input[100];
-        scanf(" %[^\n]%*c", input);
-
-        if (strcmp(input, "0") == 0) {
-            viewCart(&cart);
-        } else {
-            int choices[100];
-            int count = 0;
-            char* token = strtok(input, ",");
-            while (token != NULL && count < 100) {
-                choices[count++] = atoi(token);
-                token = strtok(NULL, ",");
-            }
-            addMultipleItemsToCart(&cart, fruits, vegetables, electronics, choices, count);
-        }
-
-        printf("3. Checkout\n");
-        printf("Select an option: ");
-        scanf("%d", &choice);
-
-        if (choice == 3) {
-            checkout(&cart);
-        }
-    } while (1); // Infinite loop; program exits after checkout
-
-    freeCart(&cart);
-    return 0;
-}
+The online shopping cart project effectively showcases fundamental data structures, utilizing linked lists and arrays to create a functional and interactive system for managing shopping activities. It allows users to seamlessly add, view, and purchase items, simulating real-world online shopping experiences.Key accomplishments of the project include:
+Dynamic Item Management: The use of a linked list allows for efficient addition and removal of items in the cart, enabling users to modify their selections easily without limitations on the number of items.
+Efficient Calculation and Checkout: The implementation of functions to calculate total costs and handle the checkout process streamlines the user experience, providing a complete shopping cycle from item selection to purchase confirmat
+Overall, this mini project serves as an excellent exercise in applying data structures to real-world problems, reinforcing the importance of efficient data management in software development.
